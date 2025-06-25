@@ -1,0 +1,20 @@
+[
+{
+  "directory": "/Users/ashu2427/Coding/cpp-projects/sub-c/build",
+  "command": "/opt/homebrew/opt/llvm/bin/clang++  -I/Users/ashu2427/Coding/cpp-projects/sub-c/include -g -std=gnu++20 -arch arm64 -o CMakeFiles/SubC.dir/main.cc.o -c /Users/ashu2427/Coding/cpp-projects/sub-c/main.cc",
+  "file": "/Users/ashu2427/Coding/cpp-projects/sub-c/main.cc",
+  "output": "CMakeFiles/SubC.dir/main.cc.o"
+},
+{
+  "directory": "/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/lexer",
+  "command": "/opt/homebrew/opt/llvm/bin/clang++ -Dlexer_EXPORTS -I/Users/ashu2427/Coding/cpp-projects/sub-c/include -g -std=gnu++20 -arch arm64 -fPIC -o CMakeFiles/lexer.dir/lexer.cc.o -c /Users/ashu2427/Coding/cpp-projects/sub-c/src/lexer/lexer.cc",
+  "file": "/Users/ashu2427/Coding/cpp-projects/sub-c/src/lexer/lexer.cc",
+  "output": "src/lexer/CMakeFiles/lexer.dir/lexer.cc.o"
+},
+{
+  "directory": "/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/parser",
+  "command": "/opt/homebrew/opt/llvm/bin/clang++ -Dparser_EXPORTS -I/Users/ashu2427/Coding/cpp-projects/sub-c/include -g -std=gnu++20 -arch arm64 -fPIC -o CMakeFiles/parser.dir/parser.cc.o -c /Users/ashu2427/Coding/cpp-projects/sub-c/src/parser/parser.cc",
+  "file": "/Users/ashu2427/Coding/cpp-projects/sub-c/src/parser/parser.cc",
+  "output": "src/parser/CMakeFiles/parser.dir/parser.cc.o"
+}
+]

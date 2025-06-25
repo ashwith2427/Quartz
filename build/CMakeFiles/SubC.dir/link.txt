@@ -1,0 +1,1 @@
+/opt/homebrew/opt/llvm/bin/clang++ -g -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/SubC.dir/main.cc.o -o SubC  -Wl,-rpath,/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/parser -Wl,-rpath,/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/lexer src/parser/libparser.dylib src/lexer/liblexer.dylib
