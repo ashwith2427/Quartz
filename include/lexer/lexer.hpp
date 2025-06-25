@@ -166,6 +166,9 @@ const std::unordered_map<char, TokenKind> singleCharacterTokens = {
     { '|', TokenKind::BinaryOR },
 };
 
+const std::vector<char> escape_characters
+    = { '\n', '\t', '\f', '\r', '\b' };
+
 const std::unordered_map<std::string_view, TokenKind> builtin_types
     = {
           { "int", TokenKind::Integer },
@@ -215,6 +218,7 @@ private:
     std::string make_identifier();
     std::string make_number();
     std::string make_string_literal();
+    std::string make_char_literal();
     std::string make_comment(bool multiline);
     void emit_token(std::vector<Token>& tokens, TokenKind kind,
         int len, std::optional<std::string> value);

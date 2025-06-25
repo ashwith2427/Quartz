@@ -6,7 +6,7 @@ Simple prog lang for fun.
 Done and dusted.
 */
 add(int a, int b) -> int = {
-    return a + b
+    return a + b + '\n'
 }
 
 main() -> void = {

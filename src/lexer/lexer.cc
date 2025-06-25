@@ -81,6 +81,45 @@ std::string Lexer::make_string_literal()
     return result;
 }
 
+std::string Lexer::make_char_literal()
+{
+    std::string result = "";
+    offset_++;
+    char ch;
+    if (current() == '\\') {
+        offset_++;
+        switch (current()) {
+        case 'n':
+            ch = '\n';
+            break;
+        case 't':
+            ch = '\t';
+            break;
+        case 'r':
+            ch = '\r';
+            break;
+        case 'b':
+            ch = '\b';
+            break;
+        case '\\':
+            ch = '\\';
+            break;
+        case '\'':
+            ch = '\'';
+            break;
+        default:
+            throw std::runtime_error(std::format(
+                "Unsupported character at Line: {}, Column: {}",
+                lineno_, local_offset_));
+        }
+    } else {
+        ch = current();
+    }
+    offset_++;
+    result += ch;
+    return result;
+}
+
 std::string Lexer::make_comment(bool multiline)
 {
     std::string result = "";
@@ -142,11 +181,10 @@ std::vector<Token> Lexer::scan()
             continue;
         }
         if (current() == '\'') {
-            eat();
-            emit_token(tokens, TokenKind::CharacterLiteral, 1,
-                std::to_string(current()));
-            assert(match("'"));
-            eat();
+            std::string char_literal = make_char_literal();
+            local_offset_ += char_literal.size() + 2;
+            emit_token(tokens, TokenKind::CharacterLiteral,
+                char_literal.size(), char_literal);
             continue;
         }
         if (current() == '"') {
@@ -158,8 +196,6 @@ std::vector<Token> Lexer::scan()
         }
         if (match("//") or match("/*")) {
             bool multiline = match("/*");
-            std::cout << std::boolalpha << "Multiline: " << multiline
-                      << '\n';
             std::string comment = make_comment(multiline);
             if (multiline) {
                 emit_token(tokens, TokenKind::MultilineComment,
