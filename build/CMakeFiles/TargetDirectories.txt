@@ -1,9 +1,0 @@
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/CMakeFiles/SubC.dir
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/CMakeFiles/edit_cache.dir
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/CMakeFiles/rebuild_cache.dir
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/lexer/CMakeFiles/lexer.dir
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/lexer/CMakeFiles/edit_cache.dir
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/lexer/CMakeFiles/rebuild_cache.dir
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/parser/CMakeFiles/parser.dir
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/parser/CMakeFiles/edit_cache.dir
-/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/parser/CMakeFiles/rebuild_cache.dir

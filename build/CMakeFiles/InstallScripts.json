@@ -1,9 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/Users/ashu2427/Coding/cpp-projects/sub-c/build/cmake_install.cmake",
-		"/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/lexer/cmake_install.cmake",
-		"/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/parser/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

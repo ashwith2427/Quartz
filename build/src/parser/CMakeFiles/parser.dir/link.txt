@@ -1,1 +1,0 @@
-/opt/homebrew/opt/llvm/bin/clang++ -g -arch arm64 -dynamiclib -Wl,-headerpad_max_install_names -o libparser.dylib -install_name @rpath/libparser.dylib CMakeFiles/parser.dir/parser.cc.o  -Wl,-rpath,/Users/ashu2427/Coding/cpp-projects/sub-c/build/src/lexer ../lexer/liblexer.dylib

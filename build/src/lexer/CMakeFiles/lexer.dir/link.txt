@@ -1,1 +1,0 @@
-/opt/homebrew/opt/llvm/bin/clang++ -g -arch arm64 -dynamiclib -Wl,-headerpad_max_install_names -o liblexer.dylib -install_name @rpath/liblexer.dylib CMakeFiles/lexer.dir/lexer.cc.o
