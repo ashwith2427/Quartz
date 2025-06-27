@@ -1,162 +1,99 @@
-file := global_scopes | local_scopes
-
-global_scopes := (global_scope)*
-
-global_scope := function | assignment_operation | imports | struct_decl | enumeration
-
-local_scopes := (local_scope)*
-
-local_scope := global_scope | loop | conditional_statement | jump_statement
-
-jump_statement := break | continue | return | return expression
-
-loop := for | while
-
-for := for '(' assignment_operation ';' (condition)? ';' (update_assignment_operation)? ')' '{'
-               local_scopes
-       '}'
-
-while := while '(' condition ')' '{' local_scopes '}'
-
-conditional_statement := if_case | switch_case
-
-if_case := if (condition) '{' (local_scopes)? '}' (chain)* (else)?
-
-chain := else if(condition) '{' (local_scopes)? '}'
-
-else := else '{' local_scopes '}'
-
-condition := expression equality_op expression
-
-equality_op := '==' | '&&' | '||' | '>=' | '<=' | '!=' | 'and' | 'or'
-
-inline_optional_return := (return)? expression
-
-switch_case := switch '(' expression ')' '{'
-                   (case)+
-                   default
-               '}'
-
-blocked_optional_return := '{' local_scopes (return expression)? '}'
-
-case := expression '=>' (inline_optional_return | blocked_optional_return) ','
-
-default := else '=>' (inline_optional_return | blocked_optional_return)
-
-function := function_declaration | function_definition
-
-function_declaration := identifier '(' (decl_params)? ')' '->' type_specifier
-
-function_definition := identifier '(' (def_params)? ')' '->' type_specifier '=' '{' local_scopes optional_return '}'
-
-optional_return := (return)? | return expression
-
-decl_params := decl_param (',' decl_param)*
-
-decl_param := type_specifier (identifier)?
-
-def_params := def_param (',' def_param)*
-
-def_param := type_specifier identifier
-
-imports := import*
-
-import := import string_literal
-
-struct_decl := struct identifier '{' (members_decl)* '}'
-
-members_decl := member_decl (members_decl)*
-
-member_decl := (static)? new_assignment_expression
-
-struct_initializer := type_specifier identifier (struct_init)?
-
-struct_init := '=' '.' '{' ('.' identifier '=' expression)* '}'
-
-struct_access := identifier '.' identifier
-
-enumeration := enum identifier '{' (identifier)* '}'
-
-enumeration_access := identifier '::' identifier
-
-array_decl := type_specifier identifier array_brackets (array_initializer)?
-
-array_brackets := '[' array_size ']' (array_brackets)*
-
-array_size := expression | ε
-
-array_initializer := '=' '{' (expression)* '}'
-
-array_access := identifier '[' expression ']'
-
-assignment_operation := new_assignment_operation | update_assignment_operation
-
-new_assignment_operation := initializer_list
-
-initializer_list := array_decl | struct_initializer | other_initializer
-
-other_initializer := type_specifier identifier '=' expression
-
-update_assignment_operation := access_list assignment_operator expression
-
-access_list := array_access | struct_access | identifier
-
-assignment_operator := '=' | '+=' | '-=' | '*=' | '/=' | '&=' | '^=' | '|=' | '>>=' | '<<=' | '%='
-
-expression := ternary_expression
-
-ternary_expression := logical_or ('?' expression ':' expression)?
-
-logical_or := logical_and ( '||' logical_and )*
-
-logical_and := bitwise_or ( '&&' bitwise_or )*
-
-bitwise_or := bitwise_xor ( '|' bitwise_xor )*
-
-bitwise_xor := bitwise_and ( '^' bitwise_and )*
-
-bitwise_and := equality ( '&' equality )*
-
-equality := relational ( ('==' | '!=') relational )*
-
-relational := additive ( ('<' | '>' | '<=' | '>=') additive )*
-
-additive := multiplicative ( ('+' | '-') multiplicative )*
-
-multiplicative := unary ( ('*' | '/' | '%') unary )*
-
-unary := ('+' | '-' | '!' | '&' | '*')? primary
-
-primary := identifier | literal | array_access | struct_access | '(' expression ')' | function_call | enumeration_access
-
-function_call := identifier '(' (params)? ')'
-
-params := expression (param_chain)*
-
-param_chain := ',' expression
-
-identifier := char (number | char)*
-
-pointer := '*' | '*' pointer
-
-literal := char | string_literal | number | decimal
-
-char := '\'' [anycharacter] '\''
-
-string_literal := '"' (char)* '"'
-
-number := digit (number)*
-
-digit := [0-9]
-
-decimal := number '.' number
-
-type_specifier := builtin_types | user_defined_types
-
-builtin_types := [int, float, char, double] (pointer)?
-
-----------------------------------------------------------------------
-
-TokenKind -> Identifier, CharacterLiteral, StringLiteral, Integer, Character, Float, Long, Double, LeftBracket, RightBracket, LeftBrace, RightBrace, LeftParen, RightParen, Comma, Dot, Plus, Minus, Multiply, Divide, Modulo, LeftShift, RightShift, BinaryOR, BinaryXOR, BinaryAND, Bang, LessThan, GreaterThan, BangEqual, LessThanEqual, GreaterThanEqual, EqualEqual, AssignEqual, AssignAdd, AssignSubtract, AssignMultiply, AssignDivide, AssignModulo, AssignLeftShift, AssignRightShift, AssignBinaryOR, AssignBinaryXOR, AssignBinaryAND, RelationalAND, RelationalOR, QuestionMark, Arrow, Semicolon, Colon, DoubleQuote, SingleQuote, MultiLineQuote, Tilda, Comment, MultilineComment, DocComment
-
-----------------------------------------------------------------------
+C Language EBNF Grammar
+
+program               := global_scope_list | local_scope_list
+
+global_scope_list     := (global_scope)*
+local_scope_list      := (local_scope)*
+
+global_scope          := function | assignment_operation | import_block | struct_declaration | enum_declaration
+
+local_scope           := global_scope | loop_statement | conditional_statement | jump_statement
+
+jump_statement        := 'break' | 'continue' | 'return' | 'return' expression
+
+loop_statement        := for_loop | while_loop
+for_loop              := 'for' '(' assignment_operation ';' (condition)? ';' (update_assignment_operation)? ')' '{' local_scope_list '}'
+while_loop            := 'while' '(' condition ')' '{' local_scope_list '}'
+
+conditional_statement := if_statement | switch_statement
+if_statement          := 'if' '(' condition ')' '{' (local_scope_list)? '}' (else_if_branch)* (else_branch)?
+else_if_branch        := 'else if' '(' condition ')' '{' (local_scope_list)? '}'
+else_branch           := 'else' '{' local_scope_list '}'
+
+condition             := expression equality_operator expression
+equality_operator     := '==' | '!=' | '&&' | '||' | '>=' | '<=' | 'and' | 'or'
+
+switch_statement      := 'switch' '(' expression ')' '{' case_clause+ default_clause '}'
+case_clause           := expression '=>' (inline_return | block_return) ','
+default_clause        := 'else' '=>' (inline_return | block_return)
+inline_return         := ('return')? expression
+block_return          := '{' local_scope_list ('return' expression)? '}'
+
+function              := function_declaration | function_definition
+function_declaration  := identifier '(' (declaration_params)? ')' '->' type_specifier
+function_definition   := identifier '(' (definition_params)? ')' '->' type_specifier '=' '{' local_scope_list optional_return '}'
+optional_return       := ('return')? | 'return' expression
+declaration_params    := declaration_param (',' declaration_param)*
+declaration_param     := type_specifier (identifier)?
+definition_params     := definition_param (',' definition_param)*
+definition_param      := type_specifier identifier
+
+import_block          := (import_statement)*
+import_statement      := 'import' string_literal
+
+struct_declaration    := 'struct' identifier '{' (member_declaration)* '}'
+member_declaration    := ('static')? new_assignment_expression
+struct_initializer    := type_specifier identifier (struct_init_suffix)?
+struct_init_suffix    := '=' '.' '{' ('.' identifier '=' expression)* '}'
+struct_access         := identifier '.' identifier
+
+enum_declaration      := 'enum' identifier '{' (identifier)* '}'
+enum_access           := identifier '::' identifier
+
+array_declaration     := type_specifier identifier array_dimensions (array_initializer)?
+array_dimensions      := '[' array_size ']' (array_dimensions)*
+array_size            := expression | ε
+array_initializer     := '=' '{' (expression)* '}'
+array_access          := identifier '[' expression ']'
+
+assignment_operation         := new_assignment_operation | update_assignment_operation
+new_assignment_operation     := initializer_expression
+initializer_expression       := array_declaration | struct_initializer | simple_initializer
+simple_initializer           := type_specifier identifier '=' expression
+update_assignment_operation  := access_target assignment_operator expression
+access_target                := array_access | struct_access | identifier
+assignment_operator          := '=' | '+=' | '-=' | '*=' | '/=' | '&=' | '^=' | '|=' | '>>=' | '<<=' | '%='
+
+expression                   := ternary_expression
+ternary_expression           := logical_or ('?' expression ':' expression)?
+logical_or                   := logical_and ('||' logical_and)*
+logical_and                  := bitwise_or ('&&' bitwise_or)*
+bitwise_or                   := bitwise_xor ('|' bitwise_xor)*
+bitwise_xor                  := bitwise_and ('^' bitwise_and)*
+bitwise_and                  := equality_expression ('&' equality_expression)*
+equality_expression          := relational_expression (('==' | '!=') relational_expression)*
+relational_expression        := additive_expression (('<' | '>' | '<=' | '>=') additive_expression)*
+additive_expression          := multiplicative_expression (('+' | '-') multiplicative_expression)*
+multiplicative_expression    := unary_expression (('*' | '/' | '%') unary_expression)*
+unary_expression             := ('+' | '-' | '!' | '&' | '*')? primary_expression
+primary_expression           := identifier | literal | array_access | struct_access | '(' expression ')' | function_call | enum_access
+function_call                := identifier '(' (arguments)? ')'
+arguments                    := expression (',' expression)*
+
+identifier                   := char (char | digit)*
+pointer                      := '*' | '*' pointer
+type_specifier               := builtin_type | user_defined_type
+builtin_type                 := 'int' | 'float' | 'char' | 'double'
+
+literal                      := char_literal | string_literal | number | decimal
+char_literal                 := '\'' [any character] '\''
+string_literal               := '"' (char)* '"'
+number                       := digit (digit)*
+digit                        := [0-9]
+decimal                      := number '.' number
+
+-----------------------------------------------------------------------
+
+TokenKind -> Identifier, CharacterLiteral, StringLiteral, Integer, Float, LeftBracket, RightBracket, LeftBrace, RightBrace, LeftParen, RightParen, Comma, Dot, Plus, Minus, Multiply, Divide, Modulo, LeftShift, RightShift, BinaryOR, BinaryXOR, BinaryAND, Bang, LessThan, GreaterThan, BangEqual, LessThanEqual, GreaterThanEqual, EqualEqual, AssignEqual, AssignAdd, AssignSubtract, AssignMultiply, AssignDivide, AssignModulo, AssignLeftShift, AssignRightShift, AssignBinaryOR, AssignBinaryXOR, AssignBinaryAND, RelationalAND, RelationalOR, QuestionMark, Arrow, Semicolon, Colon, DoubleQuote, SingleQuote, MultiLineQuote, Tilda, Comment, MultilineComment, DocComment
+
+-----------------------------------------------------------------------
